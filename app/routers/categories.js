@@ -7,9 +7,10 @@ module.exports = {
             .get(function (req, res) {
                 CategoriesController.get(req, res);
             });
-    },
-    middleware: function(router) {
-
+        router.route('/categories/:category_id')
+            .get(function (req, res) {
+                CategoriesController.getById(req, res);
+            });
     },
     afterMiddleware: function(router) {
         router.route('/categories')

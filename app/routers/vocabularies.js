@@ -7,9 +7,10 @@ module.exports = {
             .get(function (req, res) {
                 VocabulariesController.get(req, res);
             });
-    },
-    middleware: function(router) {
-
+        router.route('/vocabularies/:vocabulary_id')
+            .get(function (req, res) {
+                VocabulariesController.getById(req, res);
+            });
     },
     afterMiddleware: function(router) {
         router.route('/vocabularies')

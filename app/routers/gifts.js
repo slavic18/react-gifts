@@ -7,9 +7,10 @@ module.exports = {
             .get(function (req, res) {
                 GiftsController.get(req, res);
             });
-    },
-    middleware: function(router) {
-
+        router.route('/gifts/:gift_id')
+            .get(function (req, res) {
+                GiftsController.getById(req, res);
+            });
     },
     afterMiddleware: function(router) {
         router.route('/gifts')

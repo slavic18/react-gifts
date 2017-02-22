@@ -24,7 +24,7 @@ const VocabulariesController = {
         });
     },
     // get one vocabulary
-    getOne: function (req, res) {
+    getById: function (req, res) {
         VocabulariesModel.findById(req.params.vocabulary_id).find(function (err, vocabulary) {
             vocabulary = (!vocabulary) ? [] : vocabulary;
             if (err) res.send(err);

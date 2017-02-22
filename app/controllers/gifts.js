@@ -22,6 +22,17 @@ const giftsController = {
             res.json(gifts);
         });
     },
+    // get one category.
+    getById: function (req, res) {
+        GiftsModel.findById(req.params.gift_id).find(function (err, gift) {
+            gift = (!gift) ? [] : gift;
+            if (err) res.send(err);
+            res.json(gift);
+        });
+    },
+    getByCategory: function (req, res) {
+
+    }
 }
 
 module.exports = giftsController;

@@ -24,7 +24,7 @@ const CategoriesController = {
         });
     },
     // get one category.
-    getOne: function (req, res) {
+    getById: function (req, res) {
         CategoriesModel.findById(req.params.category_id).find(function (err, category) {
             category = (!category) ? [] : category;
             if (err) res.send(err);
