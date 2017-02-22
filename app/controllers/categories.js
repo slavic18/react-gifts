@@ -1,20 +1,13 @@
-const config = require('../configs/config');
-const _h = require('../tools/helper');
+const _h = require('mongoose-api-helper');
 const mongoose = require('mongoose');
 const CategoriesSchema = require('../models/categories');
 const CategoriesModel = mongoose.model('Categories', CategoriesSchema);
-const _ = require('lodash');
 
-let CategoriesController = {
-    /**
-     *  create new user
-     *  params array
-     *  login, password, role = 'administrator', project_ids = [], online: false, name: login
-     *
-     */
+const CategoriesController = {
+    // create new category.
     create: function (req, res) {
-        let newCategory = new CategoriesModel();   // create a new instance of the Category Schema model
-        newCategory = _h.fill(req, newCategory);  // set the newCategory data (comes from the request)
+        let newCategory = new CategoriesModel();
+        newCategory = _h.fill(req, newCategory);
         newCategory.save(function (err, data) {
             if (err) {
                 res.json({success: false, error: err.message});
@@ -22,11 +15,20 @@ let CategoriesController = {
             res.json({success: true, message: 'Category created!', category: data});
         });
     },
-    // get list of all categories
+    // get list of all categories.
     get: function (req, res) {
-        CategoriesModel.find().sort({_id: 'descending'}).find(function (err, categories) {
+        CategoriesModel.find().sort({_id: 'descending'}).populate('_vocabulary').find(function (err, categories) {
+            categories = (!categories) ? [] : categories;
             if (err) res.send(err);
             res.json(categories);
+        });
+    },
+    // get one category.
+    getOne: function (req, res) {
+        CategoriesModel.findById(req.params.category_id).find(function (err, category) {
+            category = (!category) ? [] : category;
+            if (err) res.send(err);
+            res.json(category);
         });
     },
 };

@@ -1,9 +1,8 @@
-var mongoose = require('mongoose');
-var idvalidator = require('mongoose-id-validator');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const idvalidator = require('mongoose-id-validator');
+const Schema = mongoose.Schema;
 
-// get the list of popular Messages modules in categories.
-var CategoriesModulesSchema = new Schema({
+const CategoriesModulesSchema = new Schema({
         title: {
             type: String,
             required: true,
@@ -12,11 +11,20 @@ var CategoriesModulesSchema = new Schema({
             type: String,
             required: false,
         },
+        _parent: {
+            type: Schema.Types.ObjectId,
+            ref: 'Category'
+        },
+        _vocabulary: {
+            type: Schema.Types.ObjectId,
+            ref: 'Vocabulary',
+            required: true
+        }
     }, {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}, retainKeyOrder: true}
 );
 
 
 // Validates ObjectId references
-MessagesModulesSchema.plugin(idvalidator);
+CategoriesModulesSchema.plugin(idvalidator);
 
 module.exports = CategoriesModulesSchema;
