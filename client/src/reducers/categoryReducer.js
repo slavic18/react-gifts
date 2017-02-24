@@ -1,5 +1,5 @@
 //
-export default function chat(state = {}, action) {
+export default function category(state = {}, action) {
     switch (action.type) {
         case 'AUTHENTICATED':
             return Object.assign({}, state, {
