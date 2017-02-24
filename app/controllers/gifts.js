@@ -12,7 +12,7 @@ const giftsController = {
             if (err) {
                 res.json({success: false, error: err.message});
             }
-            res.json({success: true, message: 'Gift created!', category: data});
+            res.json({success: true, message: 'Gift created!', gift: data});
         });
     },
     // get list of all gifts.

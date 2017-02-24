@@ -1,3 +1,17 @@
+/**
+ * @apiDefine MongooseError
+ *
+ * @apiError {Boolean} success Returns request success status.
+ * @apiError {String} message Successfull message.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       success: false,
+ *       error: err.message
+ *     }
+ */
+
 // create our router
 let appRouter = {
     routs: [
