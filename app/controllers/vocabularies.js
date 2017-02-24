@@ -2,12 +2,14 @@ const _h = require('mongoose-api-helper');
 const mongoose = require('mongoose');
 const VocabulariesSchema = require('../models/vocabularies');
 const VocabulariesModel = mongoose.model('Vocabularies', VocabulariesSchema);
+const TranslatedField = require('../models/translations');
+const TranslatedModel = mongoose.model('Translation', TranslatedField);
 
 const VocabulariesController = {
     // create new vocabulary
     create: function (req, res) {
         let newVocabulary = new VocabulariesModel();
-        newVocabulary = _h.fill(req, newVocabulary);
+        newVocabulary = _h.fill(req, newVocabulary, { Model: TranslatedModel });
         newVocabulary.save(function (err, data) {
             if (err) {
                 res.json({success: false, error: err.message});
@@ -17,7 +19,7 @@ const VocabulariesController = {
     },
     // get list of all vocabularies
     get: function (req, res) {
-        VocabulariesModel.find().sort({_id: 'descending'}).find(function (err, vocabularies) {
+        VocabulariesModel.find().populate('name').sort({_id: 'descending'}).find(function (err, vocabularies) {
             vocabularies = (!vocabularies) ? [] : vocabularies;
             if (err) res.send(err);
             res.json(vocabularies);

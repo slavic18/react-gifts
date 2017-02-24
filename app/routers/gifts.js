@@ -11,11 +11,12 @@ module.exports = {
             .get(function (req, res) {
                 GiftsController.getById(req, res);
             });
-    },
-    afterMiddleware: function(router) {
         router.route('/gifts')
             .post(function (req, res) {
                 GiftsController.create(req, res);
             });
+    },
+    afterMiddleware: function(router) {
+
     }
 }

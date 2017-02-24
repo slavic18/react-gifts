@@ -1,17 +1,17 @@
-var mongoose = require('mongoose');
-var idvalidator = require('mongoose-id-validator');
-var Schema = mongoose.Schema;
-var bcrypt = require('bcrypt');
-var SALT_WORK_FACTOR = 10;
+const mongoose = require('mongoose');
+const idvalidator = require('mongoose-id-validator');
+const Schema = mongoose.Schema;
+const bcrypt = require('bcrypt');
+const SALT_WORK_FACTOR = 10;
 
-var UsersSchema = new Schema({
+let UsersSchema = new Schema({
   email: {
     type: String,
     tolowercase: true,
     unique: true,
     validate: {
       validator: function(v) {
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(v);
       }
     },
@@ -31,7 +31,7 @@ var UsersSchema = new Schema({
 });
 
 UsersSchema.pre('save', function(next) {
-  var user = this;
+  let user = this;
 
   // only hash the password if it has been modified (or is new)
   if (!user.isModified('password')) return next();

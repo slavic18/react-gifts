@@ -11,11 +11,12 @@ module.exports = {
             .get(function (req, res) {
                 CategoriesController.getById(req, res);
             });
-    },
-    afterMiddleware: function(router) {
         router.route('/categories')
             .post(function (req, res) {
                 CategoriesController.create(req, res);
             });
+    },
+    afterMiddleware: function(router) {
+
     }
 }

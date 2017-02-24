@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const TranslatedField = require('./translations');
 
 const VocabulariesSchema = new Schema({
 	name: {
-		type: String,
+		type: [TranslatedField],
 		required: true
 	},
 	description: {
-		type: String
+		type: [TranslatedField]
 	},
 	order: {
 		type: Number,
