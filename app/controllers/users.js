@@ -1,6 +1,7 @@
 const config = require('../configs/config');
 const _h = require('mongoose-api-helper');
 const mongoose = require('mongoose');
+const mep = require('mongoose-error-parse');
 const jwt = require('jsonwebtoken');
 const UsersSchema = require('../models/users');
 const UsersModel = mongoose.model('User', UsersSchema);
@@ -24,7 +25,9 @@ let UsersController = {
     newUser = _h.fill(req, newUser);
 
     newUser.save(function(err) {
-      if (err) res.send(err);
+      if (err) {
+        res.json({success: false, error: mep.text(err)});
+      }
       res.json({success: true, message: 'User created!', user: newUser });
     });
   },
@@ -32,7 +35,9 @@ let UsersController = {
   get : function (req, res) {
     UsersModel.find().sort({_id: 'descending'}).find(function(err, users) {
       users = (!users) ? [] : users;
-      if (err) res.send(err);
+      if (err) {
+        res.json({success: false, error: mep.text(err)});
+      }
       res.json(users);
     });
   },
@@ -41,7 +46,9 @@ let UsersController = {
     let user_id = req.decoded._id;
     let updatedFields = this._updatedFields(req.body);
     UsersModel.findByIdAndUpdate( user_id , { $set: updatedFields }, function(err, user) {
-      if (err) res.send(err);
+      if (err) {
+        res.json({success: false, error: mep.text(err)});
+      }
       if (!user) {
         res.json({success: false, message: 'Incorect User token' });
       } else {

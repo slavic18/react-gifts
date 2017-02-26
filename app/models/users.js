@@ -50,4 +50,12 @@ UsersSchema.methods.comparePassword = function(candidatePassword, cb) {
   });
 };
 
+// Remove version from result.
+UsersSchema.set('toJSON', {
+  transform: function(doc, ret, options) {
+      delete ret.__v;
+      return ret;
+  }
+});
+
 module.exports = UsersSchema;

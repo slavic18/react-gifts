@@ -17,4 +17,12 @@ const VocabulariesSchema = new Schema({
 	},
 });
 
+// Remove version from result.
+VocabulariesSchema.set('toJSON', {
+  transform: function(doc, ret, options) {
+      delete ret.__v;
+      return ret;
+  }
+});
+
 module.exports = VocabulariesSchema;

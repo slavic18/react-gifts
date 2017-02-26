@@ -8,7 +8,7 @@
  *     HTTP/1.1 404 Not Found
  *     {
  *       success: false,
- *       error: err.message
+ *       error: "Error message"
  *     }
  */
 

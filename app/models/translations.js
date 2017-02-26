@@ -26,4 +26,12 @@ TranslatedField.pre('save', function(next) {
   next();
 });
 
+// Remove version from result.
+TranslatedField.set('toJSON', {
+  transform: function(doc, ret, options) {
+      delete ret.__v;
+      return ret;
+  }
+});
+
 module.exports = TranslatedField;
