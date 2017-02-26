@@ -11,11 +11,12 @@ module.exports = {
             .get(function (req, res) {
                 VocabulariesController.getById(req, res);
             });
-    },
-    afterMiddleware: function(router) {
         router.route('/vocabularies')
             .post(function (req, res) {
                 VocabulariesController.create(req, res);
             });
+    },
+    afterMiddleware: function(router) {
+
     }
 }

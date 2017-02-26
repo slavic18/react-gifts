@@ -5,13 +5,10 @@ const Schema = mongoose.Schema;
 const GiftsModulesSchema = new Schema({
         title: {
             type: String,
-            required: [true, 'Module name is required'],
-            unique: false,
-            dropDups: true,
+            required: [true, 'Gift title is required']
         },
         description: {
-            type: String,
-            required: false,
+            type: String
         },
         _category: {
             type: [Schema.Types.ObjectId],
@@ -22,5 +19,13 @@ const GiftsModulesSchema = new Schema({
 
 // Validates ObjectId references
 GiftsModulesSchema.plugin(idvalidator);
+
+// Remove version from result.
+GiftsModulesSchema.set('toJSON', {
+    transform: function(doc, ret, options) {
+        delete ret.__v;
+        return ret;
+    }
+});
 
 module.exports = GiftsModulesSchema;

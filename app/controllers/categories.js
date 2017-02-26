@@ -1,5 +1,6 @@
 const _h = require('mongoose-api-helper');
 const mongoose = require('mongoose');
+const mep = require('mongoose-error-parse');
 const CategoriesSchema = require('../models/categories');
 const CategoriesModel = mongoose.model('Categories', CategoriesSchema);
 
@@ -11,7 +12,7 @@ const CategoriesController = {
         newCategory = _h.fill(req, newCategory);
         newCategory.save(function (err, data) {
             if (err) {
-                res.json({success: false, error: err.message});
+                res.json({success: false, error: mep.text(err)});
             }
             res.json({success: true, message: 'Category created!', category: data});
         });
@@ -19,16 +20,20 @@ const CategoriesController = {
     // get list of all categories.
     get: function (req, res) {
         CategoriesModel.find().sort({_id: 'descending'}).populate('_vocabulary').find(function (err, categories) {
-            categories = (!categories) ? [] : categories;
-            if (err) res.send(err);
+            categories = categories || [];
+            if (err) {
+                res.json({success: false, error: mep.text(err)});
+            }
             res.json(categories);
         });
     },
     // get one category.
     getById: function (req, res) {
         CategoriesModel.findById(req.params.category_id).find(function (err, category) {
-            category = (!category) ? [] : category;
-            if (err) res.send(err);
+            category = category | [];
+            if (err) {
+                res.json({success: false, error: mep.text(err)});
+            }
             res.json(category);
         });
     },

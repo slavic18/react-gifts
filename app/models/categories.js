@@ -23,6 +23,13 @@ const CategoriesModulesSchema = new Schema({
     }, {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}, retainKeyOrder: true}
 );
 
+// Remove version from result.
+CategoriesModulesSchema.set('toJSON', {
+    transform: function(doc, ret, options) {
+        delete ret.__v;
+        return ret;
+    }
+});
 
 // Validates ObjectId references
 CategoriesModulesSchema.plugin(idvalidator);
