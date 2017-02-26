@@ -7,7 +7,7 @@ const CategoriesController = {
     // create new category.
     create: function (req, res) {
 
-        let newCategory = new CategoriesModel();
+        let newCategory = new CategoriesModel( );
         newCategory = _h.fill(req, newCategory);
         newCategory.save(function (err, data) {
             if (err) {

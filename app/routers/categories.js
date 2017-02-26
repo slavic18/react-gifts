@@ -4,6 +4,10 @@ const CategoriesController = require('../controllers/categories');
 module.exports = {
     beforeMiddleware: function(router) {
         router.route('/categories')
+            .post(function (req, res) {
+                CategoriesController.create(req, res);
+            });
+        router.route('/categories')
             .get(function (req, res) {
                 CategoriesController.get(req, res);
             });
@@ -13,9 +17,6 @@ module.exports = {
             });
     },
     afterMiddleware: function(router) {
-        router.route('/categories')
-            .post(function (req, res) {
-                CategoriesController.create(req, res);
-            });
+
     }
 }

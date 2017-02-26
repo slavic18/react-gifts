@@ -15,11 +15,11 @@ const CategoriesModulesSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Category'
         },
-        _vocabulary: {
-            type: Schema.Types.ObjectId,
-            ref: 'Vocabulary',
-            required: true
-        }
+        // _vocabulary: {
+        //     type: Schema.Types.ObjectId,
+        //     ref: 'Vocabulary',
+        //     required: true
+        // }
     }, {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}, retainKeyOrder: true}
 );
 

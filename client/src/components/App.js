@@ -1,27 +1,32 @@
 import React from "react";
 import {connect} from 'react-redux';
 import 'whatwg-fetch'
+import CategoriesList from './CategoriesList';
 // app component
 class App extends React.Component {
     constructor() {
         super();
+        this.updateCategoriesList = this.updateCategoriesList.bind(this);
     }
 
     componentDidMount() {
-        fetch('http://localhost:9000/categories')
-            .then(function(response) {
-                return console.log(response);
-            }).then(function(body) {
-            document.body.innerHTML = body
-        })
+        fetch('http://localhost:9000/api/categories/', {
+            method: 'GET',
+        }).then(function (response) {
+            return response.json();
+        }).then(this.updateCategoriesList);
+    }
 
-        // this.props.dispatch({type: 'AUTHENTICATED', data});
+    updateCategoriesList(data) {
+        this.props.dispatch({type: 'GET_CATEGORIES', data});
     }
 
     // render
     render() {
         return (
-            <div>Hello world</div>
+            <div>
+                <CategoriesList categories={this.props.categories}/>
+            </div>
         )
     }
 }
@@ -29,7 +34,9 @@ class App extends React.Component {
 
 // export the connected class
 function mapStateToProps(state) {
-    return state;
+    return {
+        categories: state.category.categories || []
+    };
 }
 
 

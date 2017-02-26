@@ -1,6 +1,16 @@
 //
 export default function category(state = {}, action) {
     switch (action.type) {
+        case 'GET_CATEGORIES':
+            return Object.assign({}, state, {
+                categories: action.data
+            });
+            break;
+        case 'SET_ACTIVE_CATEGORY':
+            return Object.assign({}, state, {
+                activeCategory: action.categoryId
+            });
+            break;
         case 'AUTHENTICATED':
             return Object.assign({}, state, {
                 userStatus: action.data.status
