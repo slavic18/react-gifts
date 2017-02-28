@@ -27,6 +27,10 @@ module.exports = {
             .get(function (req, res) {
                 GiftsController.get(req, res);
             });
+        router.route('/giftsByCategory')
+            .get(function (req, res) {
+                GiftsController.getByCategory(req, res);
+            });
 
         /**
          * @api {get} /gifts/:gift_id get gift by ID

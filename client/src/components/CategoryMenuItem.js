@@ -1,25 +1,20 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import { Link } from "react-router";
+
 
 class CategoriesMenuItem extends React.Component {
     constructor(props) {
         super(props);
-        this.setActiveCategory = this.setActiveCategory.bind(this);
-    }
-
-    setActiveCategory(e) {
-        e.preventDefault();
-        this.props.dispatch({type: 'SET_ACTIVE_CATEGORY', categoryId: this.props.category._id});
-        return false;
     }
 
     render() {
         const category = this.props.category;
         return (
-            <li className={category._id == this.props.activeCategory ? 'active' : ''}>
-                <a href={category._id} key={category._id} onClick={this.setActiveCategory}>
+            <li className={category._id == this.props.activeCategory._id ? 'active' : ''}>
+                <Link to={ '/category/' + category._id} key={category._id}>
                     {category.title}
-                </a>
+                </Link>
             </li>
         )
     }
@@ -30,7 +25,7 @@ class CategoriesMenuItem extends React.Component {
 function mapStateToProps(state) {
     return {
         // categories: state.category.categories || []
-        activeCategory: state.category.activeCategory
+        activeCategory: state.category.activeCategory || []
     }
 }
 

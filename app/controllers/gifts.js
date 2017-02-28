@@ -36,6 +36,17 @@ const giftsController = {
         });
     },
     getByCategory: function (req, res) {
+        if (req.query.category_id) {
+            GiftsModel.find({_category: req.query.category_id}).find(function (err, gifts) {
+                gifts = (!gifts) ? [] : gifts;
+                if (err) {
+                    res.json({success: false, error: mep.text(err)});
+                }
+                res.json(gifts);
+            });
+        }else {
+            res.json([]);
+        }
 
     }
 }
