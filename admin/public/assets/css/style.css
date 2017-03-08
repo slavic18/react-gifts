@@ -5494,3 +5494,15 @@ footer .footer-links a:hover {
 footer .footer-links a:last-child {
   border: none;
 }
+
+form {
+  background: #fff;
+  padding: 30px;
+}
+
+.thumbnail-preview {
+  max-width: 100%;
+  height: auto;
+  margin-top: 30px;
+  margin-bottom: 0px;
+}

@@ -95,17 +95,13 @@ module.exports = {
          *              "_id": "58afe25f3c5fed19aad3009e",
          *              "__v": 0,
          *              "order": 1,
+         *              "title": "Test name"
          *              "description": "Test description",
-         *              "name": "Test name"
          *          }
          *     }
          *
          * @apiUse MongooseError
          */
-        router.route('/categories')
-            .post(function (req, res) {
-                CategoriesController.create(req, res);
-            });
     },
     afterMiddleware: function (router) {
 

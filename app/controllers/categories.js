@@ -1,14 +1,19 @@
 const _h = require('mongoose-api-helper');
 const mongoose = require('mongoose');
 const mep = require('mongoose-error-parse');
+const fs = require('fs');
 const CategoriesSchema = require('../models/categories');
 const CategoriesModel = mongoose.model('Categories', CategoriesSchema);
 
 const CategoriesController = {
     // create new category.
     create: function (req, res) {
-
-        let newCategory = new CategoriesModel( );
+        let newCategory = new CategoriesModel();
+        console.log(req.body.image);
+        fs.readFile(req.body.imageVal, function (err, data) {
+            console.log('err', err, 'data', data);
+        });
+        return false;
         newCategory = _h.fill(req, newCategory);
         newCategory.save(function (err, data) {
             if (err) {

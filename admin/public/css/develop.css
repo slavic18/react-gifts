@@ -40,3 +40,7 @@ body {
     max-width: 200px;
     margin-bottom: 30px;
 }
+
+form {
+    background: #fff;
+}
