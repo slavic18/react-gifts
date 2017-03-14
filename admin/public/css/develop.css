@@ -6,6 +6,7 @@ body {
     display: block;
     text-align: center;
 }
+
 .menu li {
     display: inline-block;
 }
@@ -43,4 +44,9 @@ body {
 
 form {
     background: #fff;
+}
+
+.table-thumbnail img {
+    max-width: 30px;
+    height: auto;
 }

@@ -4,16 +4,12 @@ const mep = require('mongoose-error-parse');
 const fs = require('fs');
 const CategoriesSchema = require('../models/categories');
 const CategoriesModel = mongoose.model('Categories', CategoriesSchema);
+const _ = require('lodash');
 
 const CategoriesController = {
     // create new category.
     create: function (req, res) {
         let newCategory = new CategoriesModel();
-        console.log(req.body.image);
-        fs.readFile(req.body.imageVal, function (err, data) {
-            console.log('err', err, 'data', data);
-        });
-        return false;
         newCategory = _h.fill(req, newCategory);
         newCategory.save(function (err, data) {
             if (err) {
@@ -22,9 +18,26 @@ const CategoriesController = {
             res.json({success: true, message: 'Category created!', category: data});
         });
     },
+    // edit category.
+    edit: function (req, res) {
+        var newCategoryModel = new CategoriesModel() ,
+            newCategory = _h.fill(req, newCategoryModel),
+            _id = newCategory._id;
+
+        if (!req.body._thumbnail) {
+            newCategory = _.assign({'_thumbnail': undefined}, newCategory._doc);
+        }
+        CategoriesModel.findOneAndUpdate({_id}, newCategory, {new: true, upsert: true}, function (err, data) {
+            if (err) {
+                res.json({success: false, error: mep.text(err)});
+            }
+            res.json({success: true, message: 'Category updated!', category: data});
+        });
+    },
     // get list of all categories.
     get: function (req, res) {
-        CategoriesModel.find().sort({_id: 'descending'}).populate('_vocabulary').find(function (err, categories) {
+        console.log(req);
+        CategoriesModel.find().sort({_id: 'descending'}).populate('_thumbnail').find(function (err, categories) {
             categories = categories || [];
             if (err) {
                 res.json({success: false, error: mep.text(err)});
@@ -34,12 +47,15 @@ const CategoriesController = {
     },
     // get one category.
     getById: function (req, res) {
-        CategoriesModel.findById(req.params.category_id).find(function (err, category) {
-            category = category | [];
+        console.log(req.params);
+        CategoriesModel.findById(req.params.category_id).populate('_thumbnail').find(function (err, category) {
+            category = category || [];
+            console.log(category);
             if (err) {
                 res.json({success: false, error: mep.text(err)});
+                return;
             }
-            res.json(category);
+            res.json({category: category[0]});
         });
     },
 };

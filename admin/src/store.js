@@ -33,5 +33,6 @@ if (process.env.NODE_ENV !== 'production' && window.devToolsExtension) {
 const store = createStore(reducers, middleware);
 const history = syncHistoryWithStore(browserHistory, store);
 sagaMiddleware.run(sagas);
+
 // export
 export { store, history };

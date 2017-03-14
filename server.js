@@ -4,23 +4,25 @@ const app = express();
 const server = require('http').Server(app);
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const crypto = require('crypto');
+const path = require('path');
 const striptags = require('striptags');
 const port = process.env.PORT || 9000;
 const mongoose = require('mongoose');
 const appRouter = require('./app/routers/main');
-const multer  = require('multer');
+const multer = require('multer');
+const MediaController = require('./app/controllers/media');
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads/')
-    },
+    destination: './uploads/',
     filename: function (req, file, cb) {
         crypto.pseudoRandomBytes(16, function (err, raw) {
-            cb(null, raw.toString('hex') + Date.now() + '.' + mime.extension(file.mimetype));
-        });
+            if (err) return cb(err)
+
+            cb(null, raw.toString('hex') + path.extname(file.originalname))
+        })
     }
 });
-var upload = multer({ dest: 'uploads/' });
-
+var upload = multer({storage: storage});
 const options = {
     server: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}},
     replset: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}}
@@ -33,24 +35,41 @@ app.use(function (req, res, next) {
 });
 
 
-
-
-
-app.post('/fileUpload',upload.single('thumbnail'),  function(req, res, next) {
+app.post('/fileUpload', upload.single('thumbnail'), function (req, res, next) {
     console.log(req.file);
+    req.body = {
+        title: req.file.originalname,
+        mimeType: req.file.mimetype,
+        path: req.file.path
+    };
 
-    // Uploaded files:
-    // res.end(req.file);
-    res.send('File uploaded!');
+    MediaController.create(req, res);
 });
+app.get('/uploads/:name', function(req, res, next){
+    // console.log(res);
+    var options = {
+        root: __dirname + '/uploads/',
+        dotfiles: 'deny',
+        headers: {
+            'x-timestamp': Date.now(),
+            'x-sent': true
+        }
+    };
 
+    var fileName = req.params.name;
+    res.sendfile(fileName, options, function (err) {
+        if (err) {
+            next(err);
+        } else {
+            console.log('Sent:', fileName);
+        }
+    });
+});
 
 
 // configure body parser
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(bodyParser.json());
-
-
 
 
 //don't show the log when it is test

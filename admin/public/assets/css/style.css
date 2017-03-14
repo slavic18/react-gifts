@@ -5506,3 +5506,8 @@ form {
   margin-top: 30px;
   margin-bottom: 0px;
 }
+
+.table-thumbnail img {
+  max-width: 80px;
+  height: auto;
+}

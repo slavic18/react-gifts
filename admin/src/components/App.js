@@ -4,37 +4,6 @@ import {connect} from 'react-redux';
 import LeftSidebar from './LeftSidebar';
 // app component
 class App extends React.Component {
-    constructor() {
-        super();
-        this._updateGiftsList = this._updateGiftsList.bind(this);
-    }
-
-    componentDidUpdate() {
-        if (typeof this.props.params.category_id !== 'undefined') {
-            let currentCategory;
-            this.props.categories.map((item)=> {
-                if (item._id === this.props.params.category_id) {
-                    currentCategory = item;
-                }
-            });
-            this.props.dispatch({type: 'SET_ACTIVE_CATEGORY', category: currentCategory});
-            this._updateGiftsList();
-        }
-    }
-
-    _updateGiftsList() {
-        let categoryId = this.props.params.category_id;
-        fetch('http://localhost:9000/api/giftsByCategory/?category_id=' + categoryId, {
-            method: 'GET',
-        }).then(function (response) {
-            return response.json();
-        }).then((data) => {
-            this.props.dispatch({
-                type: 'GET_GIFTS',
-                gifts: data
-            })
-        });
-    }
 
     // render
     render() {
@@ -66,7 +35,6 @@ class App extends React.Component {
         )
     }
 }
-
 
 // export the connected class
 function mapStateToProps(state) {

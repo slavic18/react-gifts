@@ -27,6 +27,11 @@ module.exports = {
             .post(function (req, res) {
                 CategoriesController.create(req, res);
             });
+
+        router.route('/categories/edit')
+            .post(function (req, res) {
+                CategoriesController.edit(req, res);
+            });
         router.route('/categories')
             .get(function (req, res) {
                 CategoriesController.get(req, res);

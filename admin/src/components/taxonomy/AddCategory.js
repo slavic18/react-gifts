@@ -9,6 +9,7 @@ class AddCategory extends React.Component {
             title: '',
             description: '',
             _parent: '',
+            thumbnailId: '',
             image: '',
             imagePreviewUrl: '',
         };
@@ -47,28 +48,18 @@ class AddCategory extends React.Component {
                     imagePreviewUrl: reader.result
                 });
                 var data = new FormData();
-                data.append('thumbnail', file, file.name);
-                console.log(file.name);
-                return;
+                data.append('thumbnail', file);
                 var req = new XMLHttpRequest();
+                req.onload = (e) => {
+                    let response = JSON.parse(req.response);
+                    if (response.success && typeof response.Media !== 'undefined') {
+                        this.setState({
+                            thumbnailId: response.Media._id
+                        });
+                    }
+                };
                 req.open('POST', 'http://localhost:9000/fileUpload');
                 req.send(data);
-
-                return;
-
-                fetch('http://localhost:9000/fileUpload', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': false
-                        // 'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'data=' + data
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (data, err) {
-                    console.log(data);
-                });
-                console.log(this.state);
             };
             reader.readAsDataURL(file);
         }
@@ -80,13 +71,16 @@ class AddCategory extends React.Component {
         if (this.state.title.length < 5) {
             return;
         }
-        var formData = {
+        let formData = {
             title: this.state.title,
             description: this.state.description,
-            _parent: this.state._parent || null,
-            image: this.state.image,
-            imagePreviewUrl: this.state.imagePreviewUrl
         };
+        if (this.state._parent) {
+            formData._parent = this.state._parent;
+        }
+        if (this.state.thumbnailId) {
+            formData._thumbnail = this.state.thumbnailId;
+        }
         fetch('http://localhost:9000/api/categories', {
             method: 'POST',
             headers: {
@@ -97,12 +91,13 @@ class AddCategory extends React.Component {
             return response.json();
         }).then(this.handleSuccessSubmit);
 
-        console.log(this.state);
         return false;
     }
 
     handleSuccessSubmit(data) {
-        console.log(data);
+        if (data.success && typeof data.category !== 'undefined') {
+            this.props.router.push(`/categories/${data.category._id}`);
+        }
     }
 
     render() {
@@ -159,6 +154,10 @@ class AddCategory extends React.Component {
         );
     }
 }
+AddCategory.contextTypes = {
+    router: React.PropTypes.object
+};
+
 
 // export the connected class
 function mapStateToProps(state) {

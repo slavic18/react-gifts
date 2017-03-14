@@ -1,13 +1,31 @@
 import React from "react";
-import { Link } from "react-router";
+import {Link} from "react-router";
 
-export default class LeftSidebar extends React.Component {
+class LeftSidebar extends React.Component {
     constructor(props) {
         super(props);
         this.toggleList = this.toggleList.bind(this);
         this.state = {
             showCategories: false,
             showGifts: false,
+        };
+
+
+    }
+
+    componentDidMount() {
+        // check if categories tab is active
+        let currentLocation = this.context.router.getCurrentLocation().pathname,
+            parsedLocation = currentLocation.split('/');
+        if (parsedLocation.length > 2 && parsedLocation[1] == 'categories') {
+            this.setState({
+                showCategories: true
+            });
+        }
+        if (parsedLocation.length > 2 && parsedLocation[1] == 'gifts') {
+            this.setState({
+                showGifts: true
+            });
         }
     }
 
@@ -35,7 +53,7 @@ export default class LeftSidebar extends React.Component {
                     <div id="sidebar-menu">
                         <ul>
                             <li className='has_sub'>
-                                <a href="#" onClick={this.toggleList} data-list="showCategories"
+                                <a onClick={this.toggleList} data-list="showCategories"
                                    className={this.state.showCategories ? 'subdrop' : ''}>
                                     <i className='icon-feather'/>
                                     <span>Categories</span>
@@ -45,10 +63,12 @@ export default class LeftSidebar extends React.Component {
                                 </a>
                                 <ul style={{display: this.state.showCategories ? 'block' : 'none'}}>
                                     <li>
-                                        <Link to="/categories/add_new" ><span>Add category</span></Link>
+                                        <Link to="/categories/add_new" activeClassName="active">
+                                            <span>Add category</span>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <Link to="/categories/">
+                                        <Link to="/categories/" activeClassName="active">
                                             <span>View categories</span>
                                         </Link>
                                     </li>
@@ -78,3 +98,9 @@ export default class LeftSidebar extends React.Component {
         )
     }
 }
+
+LeftSidebar.contextTypes = {
+    router: React.PropTypes.object.isRequired
+}
+
+export default LeftSidebar;

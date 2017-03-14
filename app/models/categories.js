@@ -15,12 +15,16 @@ const CategoriesModulesSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Category'
         },
+        _thumbnail: {
+            type: Schema.Types.ObjectId,
+            ref: 'Media'
+        },
     }, {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}, retainKeyOrder: true}
 );
 
 // Remove version from result.
 CategoriesModulesSchema.set('toJSON', {
-    transform: function(doc, ret, options) {
+    transform: function (doc, ret, options) {
         delete ret.__v;
         return ret;
     }

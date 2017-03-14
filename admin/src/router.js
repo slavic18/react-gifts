@@ -9,7 +9,9 @@ import Categories from "./components/taxonomy/Categories";
 import AddGift from "./components/post_types/AddGift";
 import Gift from "./components/post_types/Gift";
 import Gifts from "./components/post_types/Gifts";
-
+function fixRedirect(nextState, replace) {
+    return false;
+}
 // build the router
 const router = (
     <Router onUpdate={() => window.scrollTo(0, 0)} history={history}>
@@ -17,11 +19,12 @@ const router = (
             <IndexRoute component={Home}/>
             <Route path="categories" component={Categories}/>
             <Route path="categories/add_new" component={AddCategory}/>
-            <Route path="categories(/:category_id)" component={Category}/>
+            <Route path="categories(/:category_id)" component={Category} onEnter={fixRedirect}/>
             <Route path="gifts/add_new" component={AddGift}/>
             <Route path="gifts" component={Gifts}/>
             <Route path="gifts(/:gift_id)" component={Gift}/>
         </Route>
+        <Route path='*' component={Home}/>
     </Router>
 );
 
