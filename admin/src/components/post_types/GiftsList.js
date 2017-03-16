@@ -1,30 +1,30 @@
 import React from "react";
-import CategoryMenuItem from "./CategoryMenuItem";
+import GiftMenuItem from "./GiftMenuItem";
 import {connect} from "react-redux";
 import {Pagination} from "react-bootstrap";
 import {push} from "react-router-redux";
 
-class CategoriesList extends React.Component {
+class GiftsList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             selectedItems: [],
         };
-        this.selectAllCategories = this.selectAllCategories.bind(this);
+        this.selectAllItems = this.selectAllItems.bind(this);
         this.updateSelectedItems = this.updateSelectedItems.bind(this);
         this.removeItems = this.removeItems.bind(this);
         this.changePage = this.changePage.bind(this);
     }
 
     componentDidMount() {
-        this.props.dispatch({type: 'FETCH_CATEGORIES'});
+        this.props.dispatch({type: 'FETCH_GIFTS'});
     }
 
-    selectAllCategories(e) {
+    selectAllItems(e) {
         let selectedItems = [];
         if (e.target.checked) {
-            this.props.categories.map((category) => {
-                selectedItems.push(category['_id']);
+            this.props.gifts.map((gift) => {
+                selectedItems.push(gift['_id']);
             });
         }
         this.setState({selectedItems});
@@ -41,7 +41,7 @@ class CategoriesList extends React.Component {
     }
 
     removeItems() {
-        this.props.dispatch({type: 'REMOVE_CATEGORIES', items: this.state.selectedItems});
+        this.props.dispatch({type: 'REMOVE_GIFTS', items: this.state.selectedItems});
     }
 
     changePage(page) {
@@ -50,11 +50,11 @@ class CategoriesList extends React.Component {
 
 
     render() {
-        const categories = this.props.categories;
+        const gifts = this.props.gifts;
         const {page} = this.props;
         const perPage = 20;
         const startOffset = (page - 1) * perPage;
-        let pages = Math.ceil(categories.length / perPage),
+        let pages = Math.ceil(gifts.length / perPage),
             startCount = 0;
 
         return (
@@ -65,7 +65,7 @@ class CategoriesList extends React.Component {
                             <div className="btn-toolbar" role="toolbar">
                                 <div className="btn-group">
                                     <div>
-                                        <input type="checkbox" id="select-all" onChange={this.selectAllCategories}
+                                        <input type="checkbox" id="select-all" onChange={this.selectAllItems}
                                                className="regular-checkbox"/>
                                         <label htmlFor="select-all"/>
                                     </div>
@@ -99,7 +99,7 @@ class CategoriesList extends React.Component {
                     <div className="table-responsive">
                         <table className="table table-hover table-message">
                             <tbody>
-                            {categories.map((value, index) => {
+                            {gifts.map((value, index) => {
                                 if (index >= startOffset && startCount < perPage) {
                                     startCount++;
                                     let isChecked = false;
@@ -111,9 +111,9 @@ class CategoriesList extends React.Component {
                                     }
 
                                     return (
-                                        <CategoryMenuItem
+                                        <GiftMenuItem
                                             key={index}
-                                            category={value}
+                                            gift={value}
                                             checkListItem={this.updateSelectedItems}
                                             isChecked={isChecked}/>
                                     )
@@ -133,14 +133,14 @@ class CategoriesList extends React.Component {
     }
 }
 
-
 // export the connected class
 function mapStateToProps(state) {
+    console.log(state);
     return {
-        categories: state.category.categories || [],
+        gifts: state.gifts.gifts || [],
         page: Number(state.routing.locationBeforeTransitions.query.page) || 1,
     };
 }
-export default connect(mapStateToProps)(CategoriesList);
+export default connect(mapStateToProps)(GiftsList);
 
 

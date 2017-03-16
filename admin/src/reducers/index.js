@@ -2,6 +2,7 @@ import {combineReducers} from "redux";
 import {routerReducer} from "react-router-redux";
 import {reducer as formReducer} from "redux-form";
 import category from "./categoryReducer";
+import gifts from "./gifts";
 
 // main reducers
 export const reducers = combineReducers({
@@ -18,5 +19,6 @@ export const reducers = combineReducers({
         }
     }),
     // your reducer here
-    category: category
+    category: category,
+    gifts: gifts
 });

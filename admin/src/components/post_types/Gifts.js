@@ -1,9 +1,13 @@
-
 import React from 'react';
+import GiftsList from "./GiftsList";
+
 export default class Gifts extends React.Component {
     render(){
         return (
-            <h2>Gifts admin</h2>
+            <div>
+                <h2>Gifts</h2>
+                <GiftsList />
+            </div>
         );
     }
 }

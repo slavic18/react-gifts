@@ -2,14 +2,14 @@ import React from "react";
 import {FormGroup, ControlLabel, HelpBlock, FormControl, Button, FieldGroup} from "react-bootstrap";
 import {stringify} from "query-string";
 import {connect} from "react-redux";
-class Category extends React.Component {
+class EditGift extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             _id: '',
             title: '',
             description: '',
-            _parent: '',
+            _category: '',
             thumbnailId: '',
             image: '',
             imagePreviewUrl: '',
@@ -22,21 +22,25 @@ class Category extends React.Component {
     }
 
     componentDidMount() {
-        var {dispatch} = this.props;
-        dispatch({type: 'FETCH_CATEGORY', payload: {categoryId: this.props.params.category_id}});
+        const {dispatch} = this.props;
+        dispatch({type: 'FETCH_GIFT', payload: {giftId: this.props.params.gift_id}});
+        dispatch({type: 'FETCH_CATEGORIES'});
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.category) {
-            const category = nextProps.category;
+        if (nextProps.gift) {
+            const gift = nextProps.gift;
             let updatedState = {
-                _id: category._id,
-                title: category.title,
-                description: category.description,
+                _id: gift._id,
+                title: gift.title,
+                description: gift.description,
             };
-            if (category._thumbnail) {
-                updatedState.thumbnailId = category._thumbnail._id;
-                updatedState.imagePreviewUrl = 'http://localhost:9000/' + category._thumbnail.path
+            if (gift._thumbnail) {
+                updatedState.thumbnailId = gift._thumbnail._id;
+                updatedState.imagePreviewUrl = 'http://localhost:9000/' + gift._thumbnail.path;
+            }
+            if (gift._category) {
+                updatedState._category = gift._category._id;
             }
             this.setState(updatedState);
         }
@@ -98,13 +102,15 @@ class Category extends React.Component {
             _id: this.state._id,
             title: this.state.title,
             description: this.state.description,
+            _category: this.state._category,
         };
+
         if (this.state._parent) {
             formData._parent = this.state._parent;
         }
 
         formData._thumbnail = this.state.thumbnailId;
-        fetch('http://localhost:9000/api/categories/edit', {
+        fetch('http://localhost:9000/api/gifts/edit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -113,7 +119,7 @@ class Category extends React.Component {
         }).then(function (response) {
             return response.json();
         }).then((response)=> {
-            if (response.success && typeof response.category !== 'undefined') {
+            if (response.success && typeof response.gift !== 'undefined') {
                 window.location.reload();
             }
         });
@@ -157,7 +163,7 @@ class Category extends React.Component {
     render() {
         return (
             <div>
-                <h2>Edit category page</h2>
+                <h2>Edit gift page</h2>
                 <div className="row">
                     <div className="col-md-9">
                         <form onSubmit={this.handleSubmit}>
@@ -168,7 +174,7 @@ class Category extends React.Component {
                                 <FormControl
                                     type="text"
                                     value={this.state.title}
-                                    placeholder="Category title"
+                                    placeholder="Gift title"
                                     name="title"
                                     onChange={this.handleChange}
                                 />
@@ -179,10 +185,26 @@ class Category extends React.Component {
                                 <FormControl
                                     componentClass="textarea"
                                     value={this.state.description}
-                                    placeholder="Category description"
+                                    placeholder="Gift description"
                                     name="description"
                                     onChange={this.handleChange}
                                 />
+                            </FormGroup>
+                            <FormGroup>
+                                <ControlLabel>Category</ControlLabel>
+                                <FormControl
+                                    componentClass="select"
+                                    value={this.state._category}
+                                    placeholder="Select category"
+                                    name="_category"
+                                    onChange={this.handleChange}
+                                >
+                                    {this.props.categories.map(category => {
+                                        return (
+                                            <option key={category._id} value={category._id}>{category.title}</option>
+                                        )
+                                    })}
+                                </FormControl>
                             </FormGroup>
                             <Button type="submit">
                                 Submit
@@ -197,10 +219,11 @@ class Category extends React.Component {
         );
     }
 }
-const mapStateToProps = (state, props) => {
+const mapStateToProps = (state) => {
     return {
-        category: state.category.currentCategory || {}
+        gift: state.gifts.currentGift || {},
+        categories: state.category.categories || []
     };
 };
 
-export default connect(mapStateToProps)(Category);
+export default connect(mapStateToProps)(EditGift);

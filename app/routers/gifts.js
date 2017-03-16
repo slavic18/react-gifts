@@ -99,6 +99,14 @@ module.exports = {
             .post(function (req, res) {
                 GiftsController.create(req, res);
             });
+        router.route('/gifts/edit')
+            .post(function (req, res) {
+                GiftsController.edit(req, res);
+            });
+        router.route('/gifts/delete')
+            .post(function (req, res) {
+                GiftsController.delete(req, res);
+            });
     },
     afterMiddleware: function(router) {
 

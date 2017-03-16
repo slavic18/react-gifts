@@ -1,8 +1,8 @@
 import {stringify} from "query-string";
 
-export const categoryApi = {
-    fetchCategory: (categoryId) => {
-        return fetch('http://localhost:9000/api/categories/' + categoryId, {
+export const giftApi = {
+    fetchGift: (giftId) => {
+        return fetch('http://localhost:9000/api/gifts/' + giftId, {
             method: 'GET',
         })
             .then(response => response.json())
@@ -10,8 +10,8 @@ export const categoryApi = {
                 return data;
             });
     },
-    fetchCategories: () => {
-        return fetch('http://localhost:9000/api/categories/', {
+    fetchGifts: () => {
+        return fetch('http://localhost:9000/api/gifts/', {
             method: 'GET',
         })
             .then(response => response.json())
@@ -19,14 +19,14 @@ export const categoryApi = {
                 return data;
             });
     },
-    removeCategories: (categories) => {
-        console.log(categories);
-        return fetch('http://localhost:9000/api/categories/delete', {
+    removeGifts: (gifts) => {
+        console.log(gifts);
+        return fetch('http://localhost:9000/api/gifts/delete', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: stringify({categories: categories})
+            body: stringify({gifts: gifts})
         })
             .then(response => response.json())
             .then((data) => {

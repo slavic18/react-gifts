@@ -11,3 +11,23 @@ export function* fetchCategory(action) {
         response: category,
     });
 }
+// fetch the categories
+export function* fetchCategories(action) {
+    // call the api to get the categories data
+    const categories = yield call(categoryApi.fetchCategories);
+    // save categories in state
+    yield put({
+        type: 'GET_CATEGORIES',
+        categories,
+    });
+}
+// remove categories
+export function* removeCategories(action) {
+    // call the api to remove categories
+    const response = yield call(categoryApi.removeCategories, action.items);
+    // save categories in state
+    yield put({
+        type: 'REMOVED_CATEGORIES',
+        categories: response.categories,
+    });
+}

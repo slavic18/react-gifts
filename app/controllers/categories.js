@@ -20,7 +20,7 @@ const CategoriesController = {
     },
     // edit category.
     edit: function (req, res) {
-        var newCategoryModel = new CategoriesModel() ,
+        var newCategoryModel = new CategoriesModel(),
             newCategory = _h.fill(req, newCategoryModel),
             _id = newCategory._id;
 
@@ -36,7 +36,6 @@ const CategoriesController = {
     },
     // get list of all categories.
     get: function (req, res) {
-        console.log(req);
         CategoriesModel.find().sort({_id: 'descending'}).populate('_thumbnail').find(function (err, categories) {
             categories = categories || [];
             if (err) {
@@ -56,6 +55,24 @@ const CategoriesController = {
                 return;
             }
             res.json({category: category[0]});
+        });
+    },
+    delete: function (req, res) {
+        let categories = req.body.categories;
+
+        if (typeof categories == 'undefined') {
+            res.json({success: false, error: 'Empty categories list'});
+        }
+        if (typeof categories == 'string') {
+            categories = [categories];
+        }
+        CategoriesModel.remove({_id: {'$in': categories}}, (err, items) => {
+            if (err) {
+                res.json({success: false, error: mep.text(err)});
+                return;
+            }
+
+            res.json({success: true, categories: categories});
         });
     },
 };

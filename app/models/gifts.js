@@ -11,9 +11,13 @@ const GiftsModulesSchema = new Schema({
             type: String
         },
         _category: {
-            type: [Schema.Types.ObjectId],
+            type: Schema.Types.ObjectId,
             ref: 'Categories'
-        }
+        },
+        _thumbnail: {
+            type: Schema.Types.ObjectId,
+            ref: 'Media'
+        },
     }, {timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}, retainKeyOrder: true}
 );
 
@@ -22,7 +26,7 @@ GiftsModulesSchema.plugin(idvalidator);
 
 // Remove version from result.
 GiftsModulesSchema.set('toJSON', {
-    transform: function(doc, ret, options) {
+    transform: function (doc, ret, options) {
         delete ret.__v;
         return ret;
     }

@@ -77,16 +77,23 @@ class LeftSidebar extends React.Component {
                             <li className='has_sub'>
                                 <a onClick={this.toggleList} data-list="showGifts"
                                    className={this.state.showGifts ? 'subdrop' : ''}>
-                                    <i className='icon-feather'/>
+                                    <i className='icon-gift'/>
                                     <span>Gifts</span>
                                     <span className="pull-right">
-                                            <i className={'fa ' + (this.state.showGifts ? 'fa-angle-up' : 'fa-angle-down') }/>
-                                        </span>
+                                        <i className={'fa ' + (this.state.showGifts ? 'fa-angle-up' : 'fa-angle-down') }/>
+                                    </span>
                                 </a>
                                 <ul style={{display: this.state.showGifts ? 'block' : 'none'}}>
-
-                                    <li><a href='alerts.html'><span>Add gift</span></a></li>
-                                    <li><a href='buttons.html'><span>View gifts</span></a></li>
+                                    <li>
+                                        <Link to="/gifts/add_new" activeClassName="active">
+                                            <span>Add gift</span>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/gifts/" activeClassName="active">
+                                            <span>View gifts</span>
+                                        </Link>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>

@@ -32,6 +32,10 @@ module.exports = {
             .post(function (req, res) {
                 CategoriesController.edit(req, res);
             });
+        router.route('/categories/delete')
+            .post(function (req, res) {
+                CategoriesController.delete(req, res);
+            });
         router.route('/categories')
             .get(function (req, res) {
                 CategoriesController.get(req, res);

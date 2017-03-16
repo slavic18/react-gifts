@@ -8,8 +8,15 @@ class CategoriesMenuItem extends React.Component {
         super(props);
     }
 
+    componentWillMount(){
+        this.setState({
+            isChecked: true
+        })
+    }
+
     render() {
-        const category = this.props.category;
+        const {category, isChecked, checkListItem} = this.props;
+
         if (typeof category.description == 'undefined') {
             category.description = '';
         }
@@ -19,14 +26,21 @@ class CategoriesMenuItem extends React.Component {
             dateComponent = <FormattedDate value={category.updated_at} day="numeric" month="numeric" year="numeric"/>;
         }
         let thumbnailSrc = '//markmusto.com/wp-content/themes/equilibrium/images/layout/no-thumb.gif';
-        if (typeof category._thumbnail !== 'undefined') {
+        if (!!category._thumbnail) {
             thumbnailSrc = '//localhost:9000/' + category._thumbnail.path
         }
 
         return (
             <tr className="unread" key={category._id}>
                 <td style={{width: 20}}>
-                    <input type="checkbox" className="rows-check"/>
+                    <div>
+                        <input type="checkbox" id={'category_id_' + category._id}
+                               data-key={category._id}
+                               className="regular-checkbox"
+                               checked={isChecked}
+                               onChange={checkListItem}/>
+                        <label htmlFor={'category_id_' + category._id}/>
+                    </div>
                 </td>
                 <td style={{width: 40}} className="table-thumbnail">
                     <img src={thumbnailSrc}/>

@@ -4,10 +4,10 @@ import {history} from "./store.js";
 import App from "./components/App";
 import Home from "./components/Home";
 import AddCategory from "./components/taxonomy/AddCategory";
-import Category from "./components/taxonomy/Category";
+import EditCategory from "./components/taxonomy/EditCategory";
 import Categories from "./components/taxonomy/Categories";
 import AddGift from "./components/post_types/AddGift";
-import Gift from "./components/post_types/Gift";
+import EditGift from "./components/post_types/EditGift";
 import Gifts from "./components/post_types/Gifts";
 function fixRedirect(nextState, replace) {
     return false;
@@ -19,10 +19,10 @@ const router = (
             <IndexRoute component={Home}/>
             <Route path="categories" component={Categories}/>
             <Route path="categories/add_new" component={AddCategory}/>
-            <Route path="categories(/:category_id)" component={Category} onEnter={fixRedirect}/>
+            <Route path="categories(/:category_id)" component={EditCategory} onEnter={fixRedirect}/>
             <Route path="gifts/add_new" component={AddGift}/>
             <Route path="gifts" component={Gifts}/>
-            <Route path="gifts(/:gift_id)" component={Gift}/>
+            <Route path="gifts(/:gift_id)" component={EditGift}/>
         </Route>
         <Route path='*' component={Home}/>
     </Router>

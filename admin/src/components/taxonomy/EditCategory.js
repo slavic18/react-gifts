@@ -1,15 +1,15 @@
 import React from "react";
-import {connect} from "react-redux";
-import {stringify} from "query-string";
 import {FormGroup, ControlLabel, HelpBlock, FormControl, Button, FieldGroup} from "react-bootstrap";
-
-class AddGift extends React.Component {
+import {stringify} from "query-string";
+import {connect} from "react-redux";
+class EditCategory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            _id: '',
             title: '',
             description: '',
-            _category: '',
+            _parent: '',
             thumbnailId: '',
             image: '',
             imagePreviewUrl: '',
@@ -17,11 +17,29 @@ class AddGift extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleThumbnailChange = this.handleThumbnailChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleSuccessSubmit = this.handleSuccessSubmit.bind(this);
+        this.thumbnailForm = this.thumbnailForm.bind(this);
+        this.handleRemoveThumbnail = this.handleRemoveThumbnail.bind(this);
     }
 
-    componentWillMount(){
-        this.props.dispatch({type:'FETCH_CATEGORIES'});
+    componentDidMount() {
+        var {dispatch} = this.props;
+        dispatch({type: 'FETCH_CATEGORY', payload: {categoryId: this.props.params.category_id}});
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.category) {
+            const category = nextProps.category;
+            let updatedState = {
+                _id: category._id,
+                title: category.title,
+                description: category.description,
+            };
+            if (category._thumbnail) {
+                updatedState.thumbnailId = category._thumbnail._id;
+                updatedState.imagePreviewUrl = 'http://localhost:9000/' + category._thumbnail.path
+            }
+            this.setState(updatedState);
+        }
     }
 
     getTitleValidationState() {
@@ -77,17 +95,16 @@ class AddGift extends React.Component {
             return;
         }
         let formData = {
+            _id: this.state._id,
             title: this.state.title,
             description: this.state.description,
         };
-        if (this.state._category) {
-            formData._category = this.state._category;
+        if (this.state._parent) {
+            formData._parent = this.state._parent;
         }
 
-        if (this.state.thumbnailId) {
-            formData._thumbnail = this.state.thumbnailId;
-        }
-        fetch('http://localhost:9000/api/gifts', {
+        formData._thumbnail = this.state.thumbnailId;
+        fetch('http://localhost:9000/api/categories/edit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -95,31 +112,63 @@ class AddGift extends React.Component {
             body: stringify(formData)
         }).then(function (response) {
             return response.json();
-        }).then(this.handleSuccessSubmit);
+        }).then((response)=> {
+            if (response.success && typeof response.category !== 'undefined') {
+                window.location.reload();
+            }
+        });
 
         return false;
     }
 
-    handleSuccessSubmit(data) {
-        if (data.success && typeof data.gift !== 'undefined') {
-            this.props.router.push(`/gifts/${data.gift._id}`);
+    handleRemoveThumbnail() {
+        this.setState({
+            thumbnailId: null,
+            imagePreviewUrl: ''
+        })
+    }
+
+    thumbnailForm() {
+        let thumbnailInput;
+        if (this.state.thumbnailId) {
+            thumbnailInput = (
+                <div className="close-thumb" onClick={this.handleRemoveThumbnail}><i className="fa fa-close"/></div>);
+        } else {
+            thumbnailInput = (<FormControl
+                type="file"
+                name="file"
+                onChange={this.handleThumbnailChange}
+            />);
         }
+
+        return (
+            <form method="POST" encType="multipart/form-data">
+                <FormGroup>
+                    <ControlLabel>Thumbnail</ControlLabel>
+                    {thumbnailInput}
+                    <div className={!this.state.imagePreviewUrl ? 'hidden' : ''}>
+                        <img className="thumbnail-preview" src={this.state.imagePreviewUrl}/>
+                    </div>
+                </FormGroup>
+            </form>
+        )
     }
 
     render() {
         return (
             <div>
-                <h2>Add new gift</h2>
+                <h2>Edit category page</h2>
                 <div className="row">
                     <div className="col-md-9">
                         <form onSubmit={this.handleSubmit}>
+                            <input type="hidden" name="_id" value={this.state._id}/>
                             <FormGroup
                                 validationState={this.getTitleValidationState()}>
                                 <ControlLabel>Title</ControlLabel>
                                 <FormControl
                                     type="text"
                                     value={this.state.title}
-                                    placeholder="Gift title"
+                                    placeholder="Category title"
                                     name="title"
                                     onChange={this.handleChange}
                                 />
@@ -130,26 +179,10 @@ class AddGift extends React.Component {
                                 <FormControl
                                     componentClass="textarea"
                                     value={this.state.description}
-                                    placeholder="Gift description"
+                                    placeholder="Category description"
                                     name="description"
                                     onChange={this.handleChange}
                                 />
-                            </FormGroup>
-                            <FormGroup>
-                                <ControlLabel>Category</ControlLabel>
-                                <FormControl
-                                    componentClass="select"
-                                    value={this.state._category}
-                                    placeholder="Select category"
-                                    name="_category"
-                                    onChange={this.handleChange}
-                                >
-                                    {this.props.categories.map(category => {
-                                        return (
-                                            <option key={category._id} value={category._id}>{category.title}</option>
-                                        )
-                                    })}
-                                </FormControl>
                             </FormGroup>
                             <Button type="submit">
                                 Submit
@@ -157,35 +190,17 @@ class AddGift extends React.Component {
                         </form>
                     </div>
                     <div className="col-md-3">
-                        <form method="POST" encType="multipart/form-data">
-                            <FormGroup>
-                                <ControlLabel>Thumbnail</ControlLabel>
-                                <FormControl
-                                    type="file"
-                                    name="file"
-                                    onChange={this.handleThumbnailChange}
-                                />
-                                <div className={!this.state.imagePreviewUrl ? 'hidden' : ''}>
-                                    <img className="thumbnail-preview" src={this.state.imagePreviewUrl}/>
-                                </div>
-                            </FormGroup>
-                        </form>
+                        {this.thumbnailForm()}
                     </div>
                 </div>
             </div>
         );
     }
 }
-AddGift.contextTypes = {
-    router: React.PropTypes.object
+const mapStateToProps = (state, props) => {
+    return {
+        category: state.category.currentCategory || {}
+    };
 };
 
-
-// export the connected class
-function mapStateToProps(state) {
-    console.log(state);
-    return {
-        categories: state.category.categories || []
-    };
-}
-export default connect(mapStateToProps)(AddGift);
+export default connect(mapStateToProps)(EditCategory);
