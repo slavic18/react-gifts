@@ -6,9 +6,10 @@ import Home from "./components/Home";
 import AddCategory from "./components/taxonomy/AddCategory";
 import EditCategory from "./components/taxonomy/EditCategory";
 import Categories from "./components/taxonomy/Categories";
+import Form from "./components/post_types/EditForm";
 import AddGift from "./components/post_types/AddGift";
 import EditGift from "./components/post_types/EditGift";
-import Gifts from "./components/post_types/Gifts";
+import GiftsList from "./components/post_types/GiftsList";
 function fixRedirect(nextState, replace) {
     return false;
 }
@@ -21,7 +22,7 @@ const router = (
             <Route path="categories/add_new" component={AddCategory}/>
             <Route path="categories(/:category_id)" component={EditCategory} onEnter={fixRedirect}/>
             <Route path="gifts/add_new" component={AddGift}/>
-            <Route path="gifts" component={Gifts}/>
+            <Route path="gifts" component={GiftsList}/>
             <Route path="gifts(/:gift_id)" component={EditGift}/>
         </Route>
         <Route path='*' component={Home}/>

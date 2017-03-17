@@ -1,5 +1,6 @@
 import React from "react";
-import GiftMenuItem from "./GiftMenuItem";
+import TableRow from "./../common/TableRow";
+import ListActions from "./../common/ListActions";
 import {connect} from "react-redux";
 import {Pagination} from "react-bootstrap";
 import {push} from "react-router-redux";
@@ -59,42 +60,13 @@ class GiftsList extends React.Component {
 
         return (
             <div>
-                <div className="data-table-toolbar">
-                    <div className="row">
-                        <div className="col-sm-8">
-                            <div className="btn-toolbar" role="toolbar">
-                                <div className="btn-group">
-                                    <div>
-                                        <input type="checkbox" id="select-all" onChange={this.selectAllItems}
-                                               className="regular-checkbox"/>
-                                        <label htmlFor="select-all"/>
-                                    </div>
-                                </div>
-
-                                <div className="btn-group hidden-xs">
-                                    <a className="btn btn-primary" onClick={this.removeItems}>
-                                        <i className="fa fa-trash-o"/>
-                                    </a>
-                                </div>
-                                <div className="btn-group hidden-xs">
-                                    <a onClick={() => {
-                                        window.location.reload()
-                                    }} className="btn btn-primary">
-                                        <i className="fa fa-undo"/>
-                                    </a>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div className="col-sm-4 hidden-xs">
-                            <div className="pull-right">
-                                <Pagination className="users-pagination no-margin" bsSize="medium" maxButtons={10} first last next
-                                            prev boundaryLinks items={pages} activePage={page} onSelect={this.changePage}/>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h2>Gifts</h2>
+                <ListActions selectAllItems={this.selectAllItems}
+                             removeItems={this.removeItems}
+                             pages={pages}
+                             page={page}
+                             changePage={this.changePage}
+                />
                 <div className="mail-list">
                     <div className="table-responsive">
                         <table className="table table-hover table-message">
@@ -111,11 +83,13 @@ class GiftsList extends React.Component {
                                     }
 
                                     return (
-                                        <GiftMenuItem
+                                        <TableRow
                                             key={index}
-                                            gift={value}
+                                            item={value}
                                             checkListItem={this.updateSelectedItems}
-                                            isChecked={isChecked}/>
+                                            isChecked={isChecked}
+                                            path="gifts"
+                                        />
                                     )
                                 }
                             })}
@@ -135,7 +109,6 @@ class GiftsList extends React.Component {
 
 // export the connected class
 function mapStateToProps(state) {
-    console.log(state);
     return {
         gifts: state.gifts.gifts || [],
         page: Number(state.routing.locationBeforeTransitions.query.page) || 1,
