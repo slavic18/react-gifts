@@ -40,7 +40,7 @@ const giftsController = {
     },
     getByCategory: function (req, res) {
         if (req.query.category_id) {
-            GiftsModel.find({_category: req.query.category_id}).find(function (err, gifts) {
+            GiftsModel.find({_category: req.query.category_id}).populate('_thumbnail').find(function (err, gifts) {
                 gifts = (!gifts) ? [] : gifts;
                 if (err) {
                     res.json({success: false, error: mep.text(err)});
